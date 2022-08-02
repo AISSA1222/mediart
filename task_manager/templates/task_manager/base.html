@@ -1,0 +1,370 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+
+<head>
+{% load static %}
+    <meta charset="UTF-8">
+    <title>MEDIA ART STUDIO</title>
+    <link rel="stylesheet" href="{% static 'task_manager/bootstrap-5.0.2-dist/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <script src ="{% static  'task_manager/bootstrap-5.0.2-dist/js/bootstrap.js' %} "></script>
+      <script src ="{% static  'task_manager/bootstrap-5.0.2-dist/js/bootstrap.min.js' %} "></script>
+     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+<style>
+    .modal , .modal2{
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+</style>
+<body>
+{% if request.session.role == "SuperUser" %}
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <a href="{% url 'task_manager:home'%}" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline">Menu</span>
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+
+                        <a href="{% url 'task_manager:users' %}" id="users" class="nav-link align-middle px-0">
+                           <i class="bi bi-people-fill"></i> <span class="ms-1 d-none d-sm-inline">Users</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'task_manager:projects'%}" id="projects" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Projects</span></a>
+                    </li>
+                    <li>
+                        <a href="{% url 'task_manager:tasks' %}"  id="task"   class="nav-link px-0 align-middle ">
+                            <i class="bi bi-list-task"></i> <span class="ms-1 d-none d-sm-inline">Tasks</span></a>
+
+                    </li>
+
+                    <li>
+                        <a href="{% url 'task_manager:clients' %}" id ="customers" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Customers</span> </a>
+                    </li>
+
+                    <li>
+                        <a href="#" id ="chat" class="nav-link px-0 align-middle">
+                            <i class="bi bi-chat"></i> <span class="ms-1 d-none d-sm-inline">Chat</span> </a>
+                    </li>
+
+                </ul>
+                <hr>
+                <div class="dropdown pb-4">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="..{{request.session.photo}}"  width="30" height="30" class="rounded-circle">
+                        <span class="d-none d-sm-inline mx-1">{{request.session.username}}</span>
+                    </a>
+                    <ul class="dropdown-menu ">
+                        <li><a class="dropdown-item" href="{% url 'task_manager:profile' %}">My Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'task_manager:logout' %}">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% else %}
+
+        <div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <a href="{% url 'task_manager:home'%}" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline">Menu</span>
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+
+
+                    <li>
+                        <a href="{% url 'task_manager:mytasks' %}"    class="nav-link px-0 align-middle ">
+                            <i class="bi bi-list-task"></i> <span class="ms-1 d-none d-sm-inline">My Tasks</span></a>
+
+                    </li>
+                     <li>
+                        <a href="#" id ="chat" class="nav-link px-0 align-middle">
+                            <i class="bi bi-chat"></i> <span class="ms-1 d-none d-sm-inline">Chat</span> </a>
+                    </li>
+
+
+
+                </ul>
+                <hr>
+                <div class="dropdown pb-4">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="..{{request.session.photo}}"  width="30" height="30" class="rounded-circle">
+                        <span class="d-none d-sm-inline mx-1">{{request.session.username}}</span>
+                    </a>
+                    <ul class="dropdown-menu ">
+                        <li><a class="dropdown-item" href="{% url 'task_manager:profile' %}">My Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'task_manager:logout' %}">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {% endif  %}
+
+
+
+
+        <div class="modal" id ="boxmessage" >
+
+  <!-- Modal content -->
+  <div class=" col-8  bg-light text-white" style="padding: 50px ; margin:0 auto;">
+
+    <span class="close">&times;</span>
+
+      <div class="row" id="chatbox" style ='max-height:300px; overflow-y:scroll;' >
+
+
+
+      </div><br>
+
+          <div class="row" id="endchat">
+
+        <form id ="post-form">
+
+    <input style="height : 60px;" type="text" id ="msg" class="form-control"  aria-describedby="emailHelp"></br>
+   <button type="submit" class="btn btn-primary"><i class="bi bi-send"></i>Send </button>
+
+
+
+</form>
+  </div>
+
+
+</div>
+
+
+</div>
+
+
+<div class="col-10" >
+           <div class="row  p-10 " id ="content">
+
+               {% block content %} {% endblock %}
+
+           </div>
+</div>
+    </div>
+
+        <script src="{% static 'task_manager/jquery-3.6.0.min.js' %}"></script>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+ $("#id_password").attr("type","password");
+
+    $("#id_dead_line").attr("type","datetime-local");
+    $("#id_start_date").attr("type","datetime-local");
+    $("#id_end_date").attr("type","datetime-local");
+
+
+   var hidden1 = true;
+    $("a").click(function(){
+
+    var f = $(this).attr('id');
+     f ="#n"+f;
+     if(hidden1 == true){
+    $(f).delay("slow").removeAttr('hidden');
+     $('.datetimeinput').attr("type","datetime-local");
+     hidden1 = false;
+     }
+     else{
+     $(f).delay("slow").attr('hidden','true');
+     hidden1 =true;
+     }
+
+    });
+
+var hidden = true;
+    $("#showuseradd").click(function(){
+      if (hidden ==true){
+          $('#addproject').removeAttr('hidden');
+          hidden = false;
+          }
+      else {
+       $('#addproject').attr('hidden','true');
+       hidden = true;
+      }
+
+    });
+
+    $('a').click(function(){
+    var d = $(this).attr('id');
+    d = '#'+d+'M';
+    c = d+'c';
+    $(c).click(function(){
+    $(d).css("display","none");
+    });
+    $(d).css("display","block");
+    });
+
+
+    $('#chat').click(function(){
+
+$('#boxmessage').css('display','block');
+
+    });
+
+
+$('.close').click(function(){
+
+ $('#boxmessage').css('display','none');
+
+    });
+
+  $("#notification").click(function(){
+
+   $("#content").empty();
+    $("#content").append($("#notif").html());
+
+   });
+
+   var attr = $(".update").attr('hidden');
+
+
+setInterval(function () {getRealData()}, 2000);
+setInterval(function () {getMsg()}, 2000);
+
+
+
+
+$('#post-form').on('submit', function(event){
+    event.preventDefault();
+
+    $.ajax({
+         url: "{% url 'task_manager:set' %}",
+         type: "POST",
+
+         data: {
+           'msg' : $('#msg').val()
+
+         },
+         cache: false,
+         success: function ( data ) {
+
+         }
+     });
+
+});
+
+
+
+
+function getRealData() {
+$.ajax({
+         url: "{% url 'task_manager:notification' %}",
+         type: "GET",
+         data: {
+             'id': {{request.session.id}}
+         },
+         cache: false,
+         success: function ( data ) {
+         data = JSON.parse(data);
+           if (data.length != 0){
+
+            text = data[0].fields.text;
+            date = data[0].fields.date;
+
+            date = date.split('T');
+            str = text+"  "+date[0]+" -------->"+ date[1].split('Z')[0];
+          if (str.includes('you')){
+            alert(str);
+            window.location="{%  url 'task_manager:mytasks' %}";
+             }
+           else if (str.includes('message')){
+            alert(str);
+
+             }
+             else{
+             alert(str);
+            window.location="{%  url 'task_manager:users' %}";
+             }
+           }
+
+         }
+     });
+
+
+ }
+
+function getMsg() {
+$.ajax({
+         url: "{% url 'task_manager:get' %}",
+         type: "GET",
+         data: {
+             'message' : 'message'
+         },
+         cache: false,
+         success: function ( data ) {
+         data = JSON.parse(data);
+
+          $('#chatbox').empty();
+
+         for (i = 0 ; i<data.length ;i++){
+             if (data[i]['fields']['sender_name'] == "{{request.session.username}}"){
+          $('#chatbox').append('<div class =" bg-dark"><span style="display:inline ; color:blue;"><p style="font-size:13px;color:red;display:inline;" > '+data[i]['fields']['sender_name']+' : </p>'+'   '+data[i]['fields']['body']+'</span></div><br>');
+$('#chatbox').scrollTop(440);
+              }
+              else{
+              $('#chatbox').append('<div class ="  bg-dark"> <span style="display:inline ; color:blue;"><p style="font-size:13px;color:white;display:inline;"  >'+data[i]['fields']['sender_name']+' : </p>'+'   '+data[i]['fields']['body']+'</span></div><br>');
+$('#chatbox').scrollTop(440);
+                        }
+         }
+
+         }
+     });
+ }
+
+});
+</script>
+</div>
+</div>
+    </div>
+</body>
+</html>
+

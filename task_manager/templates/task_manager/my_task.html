@@ -1,0 +1,78 @@
+{% extends "task_manager/base.html" %}
+{% load crispy_forms_tags %}
+{% load static%}
+
+        <div class="col-10" >
+           <div class="row  p-10 " id ="content">
+
+
+              {% block content%}
+
+       <h2> My tasks </h2>
+        <div class="dropdown-divider "></div>
+{% if tasks %}
+
+     <div class="divider"></div>
+  {% for t in tasks%}
+
+    <div class="card  " style="width:500px; margin:10px;">
+  <div class="card-body">
+      <h5 class="card-title"> {{t.task_name}} </h5><br>
+      <P>
+       Description : {{t.description}}
+      </P>
+
+      <span><i class="bi bi-cone"></i> Project  : {{t.project}} </span><br>
+      <span><i class="bi bi-calendar-event"></i> Start at : {{t.start_date}} </span><br>
+      <span><i class="bi bi-calendar-event-fill"></i> End at : {{t.end_date}} </span><br>
+        <span><i class="bi bi-alarm"></i> remaining time :{{t.dead_time}}  </span><br>
+      {% if t.accomplished is True %}
+       <span><i class="bi bi-check-circle-fill"></i> Finished :  YES </span>
+      {% else %}
+       <span><i class="bi bi-check-circle"></i> Finished : NO </span>
+       {% endif%}
+
+
+
+  </div>
+
+  <div class="card-body">
+      {% if t.accomplished is True %}
+
+ {% else %}
+      <a class="btn btn-info"  id="{{t.id}}m">Finish</a>
+       {% endif%}
+
+    <div id="{{t.id}}mM" class="modal">
+
+  <!-- Modal content -->
+  <div class=" col-5  bg-dark text-white" style="padding: 50px ; margin:0 auto;">
+
+    <span class="close">&times;</span>
+     <h2>Are you sure you want to finish this Task ??</h2> <br>
+
+      <div class="row">
+     <div class="col-3"> <a href="{% url 'task_manager:finishmytasks' t.id %}" class="btn btn-success" > YES </a></div>
+      <div class="col-3"> <a  class="btn btn-info" id ='{{t.id}}mMc'>Cancel</a></div>
+      </div>
+
+  </div>
+
+</div>
+  </div>
+</div>
+  {% endfor %}
+    {% else %}
+      <p>There are no tasks</p>
+      {% endif %}
+  </div>
+
+
+
+               </div>
+        </div>
+{% endblock %}
+    </div>
+</div>
+
+

@@ -1,0 +1,157 @@
+{% extends "task_manager/base.html" %}
+{% load crispy_forms_tags %}
+
+{% load static%}
+
+
+
+        <div class="col-10" >
+           <div class="row  p-10 " id ="content">
+
+
+              {% block content%}
+
+       <div class="col-4" style="margin:10px">
+        <button  class="btn btn-info" type="button" id="showuseradd" >
+            <i class="bi bi-plus-square-fill"></i>
+   New Project
+  </button>
+               </div>
+        <div class="dropdown-divider "></div>
+
+<form action="{% url 'task_manager:projects' %}" method="post" id ="addproject" hidden>
+    {% csrf_token %}
+    <div class="form-group">
+    {{ add_project|crispy}}<br>
+    <button type="submit"  class="btn btn-primary">Add</button>
+        </div>
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+  {{ error}}
+</div>
+    {% endif %}
+</form>
+{% if projects %}
+
+     <div class="divider"></div>
+  {% for p in projects%}
+
+    <div class="card  " style="width:300px; margin:10px;">
+  <div class="card-body">
+      <h5 class="card-title"> {{p.name}} </h5>
+      <span><i class="fs-4 bi-people"></i> Client  : {{p.client.client_name}} </span><br>
+      <span><i class="bi bi-hourglass-split"></i> Dead line  : {{p.dead_line}} </span><br>
+      {% if p.finished is True %}
+       <span><i class="bi bi-check-circle-fill"></i> Finished :  YES </span>
+      {% else %}
+       <span><i class="bi bi-check-circle"></i> Finished : NO </span>
+       {% endif%}
+
+
+
+  </div>
+
+  <div class="card-body">
+    <a class="btn btn-danger"  id="{{p.id}}m">Delete</a>
+
+
+    <div id="{{p.id}}mM" class="modal">
+
+  <!-- Modal content -->
+  <div class=" col-5  bg-dark text-white" style="padding: 50px ; margin:0 auto;">
+
+    <span class="close">&times;</span>
+     <h2>Are you sure you want to delete this Project ??</h2> <br>
+      <div class="row">
+     <div class="col-3"> <a href="{% url 'task_manager:delete_project' p.id %}" class="btn btn-danger" > YES </a></div>
+      <div class="col-3"> <a  class="btn btn-info" id ='{{p.id}}mMc'>Cancel</a></div>
+      </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+       <a href="#{{p.id}}"  id="{{p.id}}" class="btn btn-primary">Update</a>
+      <div class="dropdown-divider " ></div>
+     <form method="post" action="{% url 'task_manager:update_project' p.id%}" id="n{{p.id}}" hidden>
+{% csrf_token %}
+{{ add_project|crispy}}<br>
+    <button type="submit" class="btn btn-success">submit</button>
+
+     </form>
+      <div class="dropdown-divider "></div>
+     Task number  {{p.task_set.count}}
+       <div class="dropdown-divider "></div>
+      {% if p.task_set.all%}
+      <table class="table">
+  <thead>
+   <tr>
+      <th scope="row">Task Name</th>
+      <td>Accomplished</td>
+
+    </tr>
+
+  </thead>
+  <tbody>
+
+  {% for r in p.task_set.all  %}
+    <tr>
+      <th scope="col">{{r.task_name}}</th>
+        {% if r.accomplished is True %}
+      <th scope="col">YES</th>
+         {% else %}
+      <th scope="col">NO</th>
+        {% endif %}
+
+    </tr>
+
+{% endfor %}
+
+  </tbody>
+</table>
+{% else%}
+{% endif %}
+      <div class="dropdown-divider "></div>
+      {% if p.finished is False %}
+       <a href="{% url 'task_manager:finish_project' p.id %} "  class="btn btn-dark">Finish Project</a>
+      {% else %}
+
+      {% endif %}
+
+  </div>
+</div>
+
+  {% endfor %}
+
+    {% else %}
+      <p>There are no projects</p>
+      {% endif %}
+  </div>
+
+
+
+               </div>
+        </div>
+{% endblock %}
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+

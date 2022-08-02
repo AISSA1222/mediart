@@ -1,0 +1,109 @@
+{% extends "task_manager/base.html" %}
+{% load crispy_forms_tags %}
+{% load static%}
+
+        <div class="col-10" >
+           <div class="row  p-10 " id ="content">
+
+
+              {% block content%}
+
+       <div class="col-4" style="margin:10px">
+        <button  class="btn btn-info" type="button" id="showuseradd" >
+             <i class="bi bi-plus-square-fill"></i>
+   New Task
+  </button>
+               </div>
+        <div class="dropdown-divider "></div>
+
+<form action="{% url 'task_manager:tasks' %}" method="post" id ="addproject" hidden>
+    {% csrf_token %}
+    <div class="form-group">
+    {{ add_task|crispy}}<br>
+    <button type="submit"  class="btn btn-primary">Add</button>
+        </div>
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+  {{ error}}
+</div>
+    {% endif %}
+</form>
+{% if tasks %}
+
+     <div class="divider"></div>
+  {% for t in tasks%}
+
+    <div class="card  " style="width:500px; margin:10px;">
+  <div class="card-body">
+      <h5 class="card-title"> {{t.task_name}} </h5><br>
+      <P>
+       Description : {{t.description}}
+      </P>
+      <span><i class="fs-4 bi-people"></i> Handler  : {{t.handler}} </span><br>
+      <span><i class="bi bi-cone"></i> Project  : {{t.project}} </span><br>
+      <span><i class="bi bi-calendar-event"></i> Start at : {{t.start_date}} </span><br>
+      <span><i class="bi bi-calendar-event-fill"></i> End at : {{t.end_date}} </span><br>
+      {% if t.accomplished is True %}
+       <span><i class="bi bi-check-circle-fill"></i> Finished :  YES </span>
+      {% else %}
+       <span><i class="bi bi-check-circle"></i> Finished : NO </span>
+       {% endif%}
+
+
+
+  </div>
+
+  <div class="card-body">
+    <a class="btn btn-danger"  id="{{t.id}}m">Delete</a>
+
+
+    <div id="{{t.id}}mM" class="modal">
+
+  <!-- Modal content -->
+  <div class=" col-5  bg-dark text-white" style="padding: 50px ; margin:0 auto;">
+
+    <span class="close">&times;</span>
+     <h2>Are you sure you want to delete this Task ??</h2> <br>
+      <div class="row">
+     <div class="col-3"> <a href="{% url 'task_manager:delete_task' t.id %}" class="btn btn-danger" > YES </a></div>
+      <div class="col-3"> <a  class="btn btn-info" id ='{{t.id}}mMc'>Cancel</a></div>
+      </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+       <a href="#{{t.id}}"  id="{{t.id}}" class="btn btn-primary">Update</a>
+      <div class="dropdown-divider " ></div>
+     <form method="post" action="{% url 'task_manager:update_task' t.id%}" id="n{{t.id}}" class="update" hidden>
+{% csrf_token %}
+{{ update_task|crispy}}<br>
+    <button type="submit" class="btn btn-success">submit</button>
+
+     </form>
+  </div>
+</div>
+
+  {% endfor %}
+
+    {% else %}
+      <p>There are no tasks</p>
+      {% endif %}
+  </div>
+
+
+
+               </div>
+        </div>
+{% endblock %}
+    </div>
+</div>
+
+

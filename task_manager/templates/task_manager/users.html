@@ -1,0 +1,130 @@
+{% extends "task_manager/base.html" %}
+{% load crispy_forms_tags %}
+
+{% load static%}
+
+
+        <div class="col-10" >
+           <div class="row  p-10 " id ="content">
+{% block content%}
+       <div class= "col p-3"  >
+
+        <button  class="btn btn-info" type="button" id="showuseradd" >
+            <i class="bi bi-plus-square-fill"></i>
+   New User
+  </button>
+        <div class="dropdown-divider "></div>
+<form action="{% url 'task_manager:users'  %}" method="post" hidden id ='addproject'>
+    {% csrf_token %}
+    <div class="form-group">
+    {{ add_user|crispy}}<br>
+    <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+  {{ error}}
+</div>
+    {% endif %}
+</form>
+{% if users %}
+        </div>
+     <div class="divider"></div>
+  {% for u in users%}
+    <div class="card " style="width:300px; margin:10px;">
+
+<br>
+  <span><img  src="{{u.photo}}"  height="50" width="50" class="rounded-circle" alt="..."> <h5>{{u.username}}</h5></span>
+  <div class="card-body">
+
+      <p>{{u.address_email}}</p>
+       {% if u.active %}
+       <span> Active  : YES   </span><br>
+      <span> Logged in : {{u.delta}}   , ago </span><br>
+
+      {% else %}
+       <span>Active  : NO   </span><br>
+      <span> Logged out : {{u.delta}}   , ago </span><br>
+
+      {% endif %}
+  </div>
+
+  <div class="card-body">
+
+       <a class="btn btn-danger"  id="{{u.id}}m">Delete</a>
+
+    <div id="{{u.id}}mM" class="modal">
+
+  <!-- Modal content -->
+  <div class=" col-5  bg-dark text-white" style="padding: 50px ; margin:0 auto;">
+
+    <span class="close">&times;</span>
+     <h2>Are you sure you want to delete this user ??</h2> <br>
+      <div class="row">
+     <div class="col-3"> <a href="{% url 'task_manager:delete_user' u.id %}"  class="btn btn-danger" > YES </a></div>
+      <div class="col-3"> <a  class="btn btn-info" id ='{{u.id}}mMc'>Cancel</a></div>
+      </div>
+
+  </div>
+
+</div>
+      <div class="dropdown-divider "></div>
+     task number : {{u.task_set.count}}
+       <div class="dropdown-divider "></div>
+      {% if u.task_set.all%}
+      <table class="table">
+  <thead>
+   <tr>
+      <th scope="row">Task Name</th>
+      <td>Accomplished</td>
+
+    </tr>
+
+  </thead>
+  <tbody>
+
+  {% for r in u.task_set.all  %}
+    <tr>
+
+      <th scope="col">{{r.task_name}}</th>
+        {% if r.accomplished %}
+      <th scope="col"> YES</th>
+        {% else %}
+        <th scope="col"> NO</th>
+        {% endif %}
+
+    </tr>
+
+{% endfor %}
+
+  </tbody>
+</table>
+{% else%}
+{% endif %}
+
+  </div>
+</div>
+
+  {% endfor %}
+
+    {% else %}
+      <p>There are no users</p>
+      {% endif %}
+  </div>
+
+
+
+               </div>
+        </div>
+{% endblock %}
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+</html>

@@ -1,0 +1,99 @@
+{% extends "task_manager/base.html" %}
+{% load crispy_forms_tags %}
+{% load static%}
+
+        <div class="col-10" >
+           <div class="row  p-10 " id ="content">
+
+
+              {% block content%}
+
+       <div class="col-4" style="margin:10px">
+        <button  class="btn btn-info" type="button" id="showuseradd" >
+            <i class="bi bi-plus-square-fill"></i>
+   New Client
+  </button>
+               </div>
+        <div class="dropdown-divider "></div>
+
+<form action="{% url 'task_manager:clients' %}" method="post" id ="addproject" hidden>
+    {% csrf_token %}
+    <div class="form-group">
+    {{ add_client|crispy}}<br>
+    <button type="submit"  class="btn btn-primary">Add</button>
+        </div>
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+  {{ error}}
+</div>
+    {% endif %}
+</form>
+{% if clients %}
+
+     <div class="divider"></div>
+  {% for c in clients%}
+
+    <div class="card  " style="width:300px; margin:10px;">
+  <div class="card-body">
+      <h5 class="card-title"> {{c.client_name}} </h5><br>
+       <span><i class="bi bi-building"></i> Company  : {{c.company_name}} </span><br>
+      <span><i class="bi bi-envelope"></i> Email  : {{c.email_address}} </span><br>
+      <span><i class="bi bi-telephone"></i> Phone : {{c.phone_number}} </span><br>
+      <span><i class="bi bi-geo-alt-fill"></i> Location : {{c.geo_address}} </span><br>
+
+  </div>
+
+  <div class="card-body">
+    <a class="btn btn-danger"  id="{{c.id}}m">Delete</a>
+
+
+    <div id="{{c.id}}mM" class="modal">
+
+  <!-- Modal content -->
+  <div class=" col-5  bg-dark text-white" style="padding: 50px ; margin:0 auto;">
+
+    <span class="close">&times;</span>
+     <h2>Are you sure you want to delete this Client??</h2> <br>
+      <div class="row">
+     <div class="col-3"> <a href="{% url 'task_manager:delete_client' c.id %}" class="btn btn-danger" > YES </a></div>
+      <div class="col-3"> <a  class="btn btn-info" id ='{{c.id}}mMc'>Cancel</a></div>
+      </div>
+
+  </div>
+
+</div>
+
+
+
+
+       <a href="#{{c.id}}"  id="{{c.id}}" class="btn btn-primary">Update</a>
+      <div class="dropdown-divider " ></div>
+     <form method="post" action="{% url 'task_manager:update_client' c.id%}" id="n{{c.id}}" hidden>
+{% csrf_token %}
+{{ update_client|crispy}}<br>
+    <button type="submit" class="btn btn-success">submit</button>
+
+     </form>
+
+
+
+
+  </div>
+</div>
+
+  {% endfor %}
+
+    {% else %}
+      <p>There are no tasks</p>
+      {% endif %}
+  </div>
+
+
+
+               </div>
+        </div>
+{% endblock %}
+    </div>
+</div>
+
+

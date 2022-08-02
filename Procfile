@@ -1,0 +1,1 @@
+web gunicorn mediaartstd.wsgi.application --log- file

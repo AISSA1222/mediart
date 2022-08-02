@@ -1,0 +1,52 @@
+{% extends "task_manager/base.html" %}
+{% load crispy_forms_tags %}
+
+{% load static%}
+
+
+        <div class="col-10" >
+           <div class="row  p-10 " id ="content">
+{% block content%}
+       <div class= "col p-3"  >
+           <div class="card" style="width: 30rem; margin:0 auto;">
+
+ <img  src="..{{photo}}"  height="70" width="70" class="rounded-circle" alt="..."  style="margin-top:10px;margin-left:10px;">
+  <div class="card-body">
+    <h5 class="card-title">{{username}}</h5>
+    <p class="card-text">{{ email }}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">{{role}}</li>
+  </ul>
+  <div class="card-body">
+      <button  class="btn btn-info" type="button" id="showuseradd" > update</button>
+        <div class="dropdown-divider "></div>
+<form action="{% url 'task_manager:profile' %}" method="post" hidden id ='addproject' enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+    {{ update_user|crispy}}<br>
+    <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+
+</form>
+     <h3> update your photo</h3>
+      <div class="alert alert-warning" role="alert">
+  the photo size must be <= 1MB
+</div>
+      <br>
+
+      <form method="post" action="{%  url 'task_manager:update_photo' %}"  enctype="multipart/form-data">
+          {% csrf_token %}
+          <label class="form-label" for="customFile">choose a photo</label>
+<input type="file" name="photo" class="form-control" id="customFile" /><br>
+          <button type="submit" class="btn btn-secondary">submit</button>
+      </form>
+</div>
+
+
+  </div>
+</div>
+    </div>
+{% endblock %}
+
+    </div>
